@@ -9,11 +9,11 @@ function move(image, x, y) {
 
 // constants
 const logo = document.getElementById("dvd-logo");
-const speed = 2;
+const speed = 1;
 
 // variables
-let x = 1;
-let y = 1;
+let x = randint(1, window.innerWidth - logo.clientWidth - 1);
+let y = randint(1, window.innerHeight - logo.clientHeight - 1);
 let direction = [1, 1];
 
 // main loop
