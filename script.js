@@ -14,7 +14,11 @@ const speed = 1;
 // variables
 let x = randint(1, window.innerWidth - logo.clientWidth - 1);
 let y = randint(1, window.innerHeight - logo.clientHeight - 1);
+
 let direction = [1, 1];
+
+// move the logo to the randomized inital position
+move(logo, x, y);
 
 // main loop
 setInterval(() => {
