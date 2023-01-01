@@ -1,3 +1,4 @@
+// utility functions
 function randint(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
@@ -17,7 +18,7 @@ let y = randint(1, window.innerHeight - logo.clientHeight - 1);
 
 let direction = [1, 1];
 
-// move the logo to the randomized inital position
+// move the logo to the randomized initial position
 move(logo, x, y);
 
 // main loop
@@ -25,12 +26,14 @@ setInterval(() => {
     x += speed * direction[0];
     y += speed * direction[1];
 
+    // check if logo is bouncing on the left/right side
     if (x <= 1) {
         direction[0] = 1;
     } else if (x + logo.clientWidth + 1 >= window.innerWidth) {
         direction[0] = -1;
     }
     
+    // check if logo is bouncing on the top/bottom side
     if (y <= 1) {
         direction[1] = 1;
     } else if (y + logo.clientHeight + 1 >= window.innerHeight) {
