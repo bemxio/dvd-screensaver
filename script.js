@@ -33,6 +33,15 @@ function getDimensions(image) {
     return [width, height];
 }
 
+function changeDirection(index, value) {
+    direction[index] = value;
+
+    // check if color randomization is enabled and if the direction changed
+    if (randomizeColor) {
+        logo.style.fill = `rgb(${randint(0, 255)}, ${randint(0, 255)}, ${randint(0, 255)})`;
+    }
+}
+
 // functions for getting the logo
 function getLogoURL() {
     if (!params.has("logo")) {
@@ -87,6 +96,7 @@ const params = new URLSearchParams(window.location.search);
 const logo = getLogo(getLogoURL());
 const dimensions = getDimensions(logo);
 
+const randomizeColor = params.has("randomizeColor") ? params.get("randomizeColor") : true;
 const speed = params.has("speed") ? params.get("speed") : 1;
 
 // variables
@@ -107,22 +117,24 @@ move(logo, x, y);
 
 // main loop
 setInterval(() => {
+    // change the coords based on the direction & speed
     x += speed * direction[0];
     y += speed * direction[1];
 
     // check if logo is bouncing on the left/right side
     if (x <= 1) {
-        direction[0] = 1;
+        changeDirection(0, 1);
     } else if (x + dimensions[0] + 1 >= window.innerWidth) {
-        direction[0] = -1;
+        changeDirection(0, -1);
     }
     
     // check if logo is bouncing on the top/bottom side
     if (y <= 1) {
-        direction[1] = 1;
+        changeDirection(1, 1);
     } else if (y + dimensions[1] + 1 >= window.innerHeight) {
-        direction[1] = -1;
+        changeDirection(1, -1);
     }
 
+    // move the logo to the current X and Y coords
     move(logo, x, y);
 });
