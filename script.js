@@ -79,12 +79,10 @@ function getLogo(url) {
     }
     
     // filter any "background color defying" attributes in the SVG
-    for (const element of image.querySelectorAll("[fill]")) {
-        element.removeAttribute("fill");
-    }
-
-    for (const element of image.querySelectorAll("[style]")) {
-        element.removeAttribute("style");
+    for (const attribute of ["fill", "style"]) {
+        for (const element of image.querySelectorAll(`[${attribute}]`)) {
+            element.removeAttribute(attribute);
+        }
     }
     
     return image;
