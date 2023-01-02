@@ -38,15 +38,19 @@ function getLogo(url) {
         return getLogo("/logos/default.svg");
     }
     
-    image = image.firstElementChild;
-    
-    if (image == null || image.tagName != "SVG") {
+    image = image.querySelector("svg");
+
+    if (image == null) {
         return getLogo("/logos/default.svg");
     }
     
-    // filter any "fill" attributes in the SVG
+    // filter any "background color defying" attributes in the SVG
     for (const element of image.querySelectorAll("[fill]")) {
         element.removeAttribute("fill");
+    }
+
+    for (const element of image.querySelectorAll("[style]")) {
+        element.removeAttribute("style");
     }
     
     return image;
@@ -69,7 +73,7 @@ logo.id = "dvd-logo";
 logo.style.fill = "white";
 
 // add the logo to the page
-document.append(logo);
+document.body.append(logo);
 
 // move the logo to the randomized initial position
 move(logo, x, y);
