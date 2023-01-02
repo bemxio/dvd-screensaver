@@ -96,7 +96,9 @@ const params = new URLSearchParams(window.location.search);
 const logo = getLogo(getLogoURL());
 const dimensions = getDimensions(logo);
 
+const initalColor = params.has("initalColor") ? params.get("initalColor") : "white";
 const randomizeColor = params.has("randomizeColor") ? params.get("randomizeColor") : true;
+
 const speed = params.has("speed") ? params.get("speed") : 1;
 
 // variables
@@ -107,7 +109,7 @@ let direction = [1, 1];
 
 // set the ID and the fill color to the logo
 logo.id = "dvd-logo";
-logo.style.fill = "white";
+logo.style.fill = initalColor;
 
 // add the logo to the page
 document.body.append(logo);
