@@ -97,7 +97,12 @@ const logo = getLogo(getLogoURL());
 const dimensions = getDimensions(logo);
 
 const initalColor = params.has("initalColor") ? params.get("initalColor") : "white";
-const randomizeColor = params.has("randomizeColor") ? params.get("randomizeColor") : true;
+let randomizeColor = true;
+
+// if the option is defined and is equal to `false`
+if (params.has("randomizeColor") && (params.get("randomizeColor") == "false" || params.get("randomizeColor") == "0")) {
+    randomizeColor = false;
+}
 
 const speed = params.has("speed") ? params.get("speed") : 1;
 
