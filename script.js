@@ -87,7 +87,7 @@ const params = new URLSearchParams(window.location.search);
 const logo = getLogo(getLogoURL());
 const dimensions = getDimensions(logo);
 
-const speed = 1;
+const speed = params.has("speed") ? params.get("speed") : 1;
 
 // variables
 let x = randint(1, window.innerWidth - dimensions[0] - 1);
