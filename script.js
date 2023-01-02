@@ -8,6 +8,31 @@ function move(image, x, y) {
     image.style.top = y;
 }
 
+function getDimensions(image) {
+    let width = image.getAttribute("width");
+    let height = image.getAttribute("height");
+
+    if (width != null && height != null) {
+        return [parseInt(width), parseInt(height)];
+    }
+
+    // if getting the width & height from the specific attributes
+    // didn't work, then get the values from the viewbox
+    let viewbox = image.getAttribute("viewBox");
+
+    if (viewbox == null) {
+        return [300, 150]; // default dimensions for SVG
+    }
+
+    viewbox = viewbox.split(" ");
+
+    // TODO: add the offsets of min-x and min-y to the width & height
+    width = parseInt(viewbox[2]);
+    height = parseInt(viewbox[3]);
+
+    return [width, height];
+}
+
 // functions for getting the logo
 function getLogoURL() {
     if (!params.has("logo")) {
@@ -60,11 +85,13 @@ function getLogo(url) {
 const params = new URLSearchParams(window.location.search);
 
 const logo = getLogo(getLogoURL());
+const dimensions = getDimensions(logo);
+
 const speed = 1;
 
 // variables
-let x = randint(1, window.innerWidth - logo.clientWidth - 1);
-let y = randint(1, window.innerHeight - logo.clientHeight - 1);
+let x = randint(1, window.innerWidth - dimensions[0] - 1);
+let y = randint(1, window.innerHeight - dimensions[1] - 1);
 
 let direction = [1, 1];
 
@@ -86,14 +113,14 @@ setInterval(() => {
     // check if logo is bouncing on the left/right side
     if (x <= 1) {
         direction[0] = 1;
-    } else if (x + logo.clientWidth + 1 >= window.innerWidth) {
+    } else if (x + dimensions[0] + 1 >= window.innerWidth) {
         direction[0] = -1;
     }
     
     // check if logo is bouncing on the top/bottom side
     if (y <= 1) {
         direction[1] = 1;
-    } else if (y + logo.clientHeight + 1 >= window.innerHeight) {
+    } else if (y + dimensions[1] + 1 >= window.innerHeight) {
         direction[1] = -1;
     }
 
