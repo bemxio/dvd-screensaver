@@ -1,4 +1,4 @@
-// utility functions
+// helper functions
 function randint(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
@@ -9,6 +9,7 @@ function move(image, x, y) {
 }
 
 function getDimensions(image) {
+    // get the dimensions from the width and height attributes
     let width = image.getAttribute("width");
     let height = image.getAttribute("height");
 
@@ -16,8 +17,7 @@ function getDimensions(image) {
         return [parseInt(width), parseInt(height)];
     }
 
-    // if getting the width & height from the specific attributes
-    // didn't work, then get the values from the viewbox
+    // get the dimensions from the viewbox if the width and height are not set
     let viewbox = image.getAttribute("viewBox");
 
     if (viewbox == null) {
@@ -26,7 +26,6 @@ function getDimensions(image) {
 
     viewbox = viewbox.split(" ");
 
-    // TODO: add the offsets of min-x and min-y to the width & height
     width = parseInt(viewbox[2]);
     height = parseInt(viewbox[3]);
 
@@ -42,8 +41,8 @@ function changeDirection(index, value) {
     }
 }
 
-// functions for getting the logo
 function getLogoURL() {
+    // return the default logo if the parameter is not set
     if (!params.has("logo")) {
         return "/logos/default.svg"
     }
@@ -52,39 +51,39 @@ function getLogoURL() {
 }
 
 function getLogo(url) {
+    // get the SVG logo from the URL
     const request = new XMLHttpRequest();
     const parser = new DOMParser();
     
     request.open("GET", url, false);
     request.send(null);
     
-    // parse and get the SVG element
-    // if there are any errors along the way,
-    // get the default "DVD Video" logo instead
-    
+    // if the request failed, return the default logo
     if (request.status != 200) {
         return getLogo("/logos/default.svg");
     }
     
     let image = parser.parseFromString(request.responseText, "text/html");
 
+    // if the image is not an SVG, return the default logo
     if (image.querySelector("parsererror")) {
         return getLogo("/logos/default.svg");
     }
     
     image = image.querySelector("svg");
 
+    // if the image is null, return the default logo
     if (image == null) {
         return getLogo("/logos/default.svg");
     }
     
-    // filter any "background color defying" attributes in the SVG
+    // filter any color attributes from the SVG
     for (const attribute of ["fill", "style"]) {
         for (const element of image.querySelectorAll(`[${attribute}]`)) {
             element.removeAttribute(attribute);
         }
     }
-    
+
     return image;
 }
 
@@ -94,15 +93,15 @@ const params = new URLSearchParams(window.location.search);
 const logo = getLogo(getLogoURL());
 const dimensions = getDimensions(logo);
 
-const initialColor = params.has("initialColor") ? params.get("initialColor") : "white";
+const initialColor = params.get("initialColor") || "white";
 let randomizeColor = true;
 
-// if the option is defined and is equal to `false`
-if (params.has("randomizeColor") && (params.get("randomizeColor") == "false" || params.get("randomizeColor") == "0")) {
+// don't randomize the color if the parameter is set to false
+if (params.has("randomizeColor") && params.get("randomizeColor") in ["false", "0"]) {
     randomizeColor = false;
 }
 
-const speed = params.has("speed") ? params.get("speed") : 1;
+const speed = params.get("speed") || 1.0;
 
 // variables
 let x = randint(1, window.innerWidth - dimensions[0] - 1);
@@ -111,7 +110,7 @@ let y = randint(1, window.innerHeight - dimensions[1] - 1);
 let direction = [1, 1];
 
 // set the ID and the fill color to the logo
-logo.id = "dvd-logo";
+logo.id = "logo";
 logo.style.fill = initialColor;
 
 // add the logo to the page
